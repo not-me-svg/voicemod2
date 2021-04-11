@@ -51,7 +51,7 @@ export default {
     const favVoices = computed(() => store.getters.favVoices);
 
     const handleScroll = () => scrollY.value = window.scrollY;
-    const scrollTop = () => window.scrollTo({top: 0, behavior: 'smooth'});
+    const scrollTop = () => window.scrollTo({ top: 0, behavior: 'smooth' });
 
     onMounted(async () => {
         await store.dispatch('fetchVoices');

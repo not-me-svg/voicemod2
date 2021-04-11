@@ -1,11 +1,24 @@
 import { createStore } from 'vuex';
 import voicesData from '@/data/voices.json';
 
+function filterByKeyword(list, query) {
+  if (!query) return list;
+  const queryFormatted = query.toLowerCase();
+  return list.filter(voice => voice.name.toLowerCase().match(queryFormatted));
+}
+
+function filterByCategory(list, category) {
+  if (!category || category === 'all') return list;
+  return list.filter(voice => voice.tags[0] === category);
+}
+
 export default createStore({
   state: {
     voices: [],
     favVoices: [],
-    filteredVoices: []
+    filteredVoices: [],
+    category: 'all',
+    searchQuery: null
   },
   mutations: {
     setVoices(state, payload) {
@@ -13,36 +26,35 @@ export default createStore({
     },
 
     setFilteredVoices(state, payload) {
-      state.filteredVoices = payload
+      state.filteredVoices = payload;
+    },
+
+    setCategory(state, payload) {
+      state.category = payload;
+    },
+
+    setsearchQuery(state, payload) {
+      state.searchQuery = payload;
     }
   },
   actions: {
     fetchVoices({ commit }){
-      commit("setVoices", voicesData);
+      commit('setVoices', voicesData);
     },
 
-    filterVoices({ commit, state }, tag) {
-      const filter = state.voices.filter(voice => voice.tags[0] === tag);
-      if (tag) {
-        if (tag === 'all') {
-          commit('setFilteredVoices', state.voices)
-        } else {
-          commit('setFilteredVoices', filter)
-        }
-      } else {
-        commit('setFilteredVoices', state.voices)
-      }
-    },
+    filterVoices({ commit, state }, params) {
+      commit('setCategory', params && params.category ? params.category : state.category);
+      commit('setsearchQuery', (params && (params.query || params.query === '')) ? params.query : state.searchQuery);
 
-    searchVoices({ commit, state }, query) {
-      let filter;
-      if (query) {
-        const queryFormatted = query.toLowerCase();
-        filter = state.voices.filter(voice => voice.name.toLowerCase().match(queryFormatted));
-      } else {
-        filter = state.voices;
-      }
-      commit('setFilteredVoices', filter)
+      const filter = filterByCategory(
+        filterByKeyword(
+          state.voices, 
+          state.searchQuery
+        ), 
+        state.category
+      );
+      
+      commit('setFilteredVoices', filter);
     },
 
     sortVoices({ state }, order) {

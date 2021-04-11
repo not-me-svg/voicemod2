@@ -48,7 +48,7 @@ export default {
     const categories = computed(() => store.getters.categories);
     const voices = computed(() => store.getters.voicesList);
 
-    const filterVoices = (e) => store.dispatch('filterVoices', e);
+    const filterVoices = (e) => store.dispatch('filterVoices', { category: e});
 
     const sortVoices = (e) => store.dispatch('sortVoices', e);
 

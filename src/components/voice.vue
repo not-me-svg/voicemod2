@@ -30,7 +30,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(["selectVoice", "favVoice"])
+    ...mapActions(['selectVoice', 'favVoice'])
   }
 };
 </script>
