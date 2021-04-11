@@ -36,7 +36,7 @@
 
 <script>
 import { useStore } from "vuex";
-import { computed, onMounted } from 'vue'
+import { ref, computed, onMounted, onUnmounted } from 'vue';
 import Voice from '@/components/voice';
 
 export default {
@@ -44,21 +44,25 @@ export default {
   components: { Voice },
   setup(){
     const store = useStore();
+    
+    const scrollY = ref(0);
 
-    const voices = computed(() => {
-        return store.getters.voicesList
-    })
+    const voices = computed(() => store.getters.voicesList);
+    const favVoices = computed(() => store.getters.favVoices);
 
-    const favVoices = computed(() => {
-        return store.getters.favVoices
-    })
+    const handleScroll = () => scrollY.value = window.scrollY;
+    const scrollTop = () => window.scrollTo({top: 0, behavior: 'smooth'});
 
     onMounted(async () => {
         await store.dispatch('fetchVoices');
         await store.dispatch('filterVoices');
+
+        window.addEventListener('scroll', handleScroll);
     })
 
-    return { voices, favVoices }
+    onUnmounted(() => window.removeEventListener('scroll', handleScroll));
+
+    return { voices, favVoices, scrollY, scrollTop }
   }
 };
 </script>

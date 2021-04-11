@@ -27,7 +27,8 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from "vuex";
+import { useStore } from "vuex";
+import { ref, computed } from 'vue';
 import Search from '@/components/search';
 import Select from '@/components/select';
 import Button from '@/components/button';
@@ -39,23 +40,26 @@ export default {
     Select,
     Button
   },
-  data() {
-    return {
-      orderOptions: ['ascending', 'descending'],
-    }
-  },
-  computed: {
-    ...mapGetters(["voicesList", "categories"]),
-  },
-  methods: {
-    ...mapActions(["filterVoices", "sortVoices", "selectVoice", "handleSearch"]),
+  setup() {
+    const store = useStore();
 
-    randomize() {
-      const rndm = Math.floor(Math.random() * (this.voicesList.length - 0)) + 0;
-      this.selectVoice(this.voicesList[rndm].id);
-      const item = document.getElementById(`${this.voicesList[rndm].id}`);
+    const orderOptions = ref(['ascending', 'descending']);
+
+    const categories = computed(() => store.getters.categories);
+    const voices = computed(() => store.getters.voicesList);
+
+    const filterVoices = (e) => store.dispatch('filterVoices', e);
+
+    const sortVoices = (e) => store.dispatch('sortVoices', e);
+
+    const randomize = () => {
+      const rndm = Math.floor(Math.random() * (voices.value.length - 0)) + 0;
+      store.dispatch('selectVoice', voices.value[rndm].id)
+      const item = document.getElementById(`${voices.value[rndm].id}`);
       item.scrollIntoView({ block: 'center', behavior: 'smooth' });
     }
+
+    return { orderOptions, voices, categories, filterVoices, sortVoices, randomize }
   }
 };
 </script>

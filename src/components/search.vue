@@ -18,9 +18,7 @@ export default {
     const query = ref('');
     const store = useStore();
 
-    const handleSearch = () => {
-      store.dispatch('searchVoices', query.value)
-    }
+    const handleSearch = () => store.dispatch('searchVoices', query.value);
 
     const resetInput = () => {
       query.value = '';

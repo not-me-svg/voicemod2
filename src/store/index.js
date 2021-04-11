@@ -34,14 +34,6 @@ export default createStore({
       }
     },
 
-    sortVoices({ state }, order) {
-      if (order === 'ascending') {
-        state.filteredVoices.sort((a, b) => (a.name > b.name ? 1 : -1));
-      } else {
-        state.filteredVoices.sort((a, b) => (a.name > b.name ? -1 : 1));
-      }
-    },
-
     searchVoices({ commit, state }, query) {
       let filter;
       if (query) {
@@ -51,6 +43,14 @@ export default createStore({
         filter = state.voices;
       }
       commit('setFilteredVoices', filter)
+    },
+
+    sortVoices({ state }, order) {
+      if (order === 'ascending') {
+        state.filteredVoices.sort((a, b) => (a.name > b.name ? 1 : -1));
+      } else {
+        state.filteredVoices.sort((a, b) => (a.name > b.name ? -1 : 1));
+      }
     },
 
     selectVoice({ state }, id) {
