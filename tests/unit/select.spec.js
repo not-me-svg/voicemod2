@@ -9,7 +9,7 @@ describe('select.vue', () => {
 
   test('on click select must be opened', () => {
     const wrapper = mount(Select);
-    wrapper.find('.select-container_selected').trigger('click');
+    wrapper.find('.vm-select-container_selected').trigger('click');
     expect(wrapper.vm.open).toBe(true);
   });
 
@@ -17,7 +17,7 @@ describe('select.vue', () => {
     const wrapper = mount(Select);
     wrapper.vm.selectOption = jest.fn();
     if (wrapper.vm.open) {
-      wrapper.find('.select-container_items_option').trigger('click');
+      wrapper.find('.vm-select-container_items_option').trigger('click');
       expect(wrapper.vm.selectOption).toBeCalled();
       expect(wrapper.vm.open).toBe(false);
     }
