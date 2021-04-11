@@ -1,8 +1,8 @@
 <template>
-  <div class="homepage">
+  <div class="homepage position-relative">
     <div class="homepage-container">
-      <section v-if="favVoices.length" class="homepage-section">
-        <div class="homepage-section_title d-flex align-items-center">
+      <section id="homepage-section--favs" class="homepage-section" v-if="favVoices.length">
+        <div class="d-flex align-items-center">
           <h4 class="homepage-section_title_text text-uppercase">Favourite Voices</h4>
           <div class="homepage-section_title_line"></div>
         </div>
@@ -14,37 +14,51 @@
       </section>
 
       <section class="homepage-section">
-        <div class="homepage-section_title d-flex align-items-center">
+        <div class="d-flex align-items-center">
           <h4 class="homepage-section_title_text text-uppercase">Pro Voices</h4>
           <div class="homepage-section_title_line"></div>
         </div>
-
-        <div class="homepage-voices-list">
-          <Voice  v-for="voice in voicesList" :key="voice.id"
+        
+        <div class="homepage-voices-list" v-if="voices.length">
+          <Voice  v-for="voice in voices" :key="voice.id"
                   :voice="voice" :id="voice.id" />
         </div>
       </section>
     </div>
+
+    <button v-if="scrollY > 800"
+            @click="scrollTop"
+            class="homepage-scrolltop position-fixed d-flex justify-content-center align-items-center">
+      <img src="./../assets/select-arrow.svg" alt="Scroll to top" />
+    </button>
   </div>
 </template>
 
 <script>
-import { mapGetters, mapActions } from "vuex";
+import { useStore } from "vuex";
+import { computed, onMounted } from 'vue'
 import Voice from '@/components/voice';
 
 export default {
   name: 'HomePage',
-  components: {
-    Voice,
-  },
-  methods: {
-    ...mapActions(["fetchVoices"])
-  },
-  computed: {
-    ...mapGetters(["voicesList", "favVoices"]),
-  },
-  created() {
-    this.fetchVoices()
+  components: { Voice },
+  setup(){
+    const store = useStore();
+
+    const voices = computed(() => {
+        return store.getters.voicesList
+    })
+
+    const favVoices = computed(() => {
+        return store.getters.favVoices
+    })
+
+    onMounted(async () => {
+        await store.dispatch('fetchVoices');
+        await store.dispatch('filterVoices');
+    })
+
+    return { voices, favVoices }
   }
 };
 </script>
@@ -76,5 +90,21 @@ export default {
 
   @media (min-width: 1200px) {
     .homepage-voices-list { grid-template-columns: repeat(6, 1fr); }
+  }
+
+  .homepage-scrolltop {
+    bottom: 40px;
+    right: -20px;
+    width: 60px;
+    height: 60px;
+    border-radius: 100%;
+    background: rgba(0, 0, 0, 0.4);
+  }
+
+  .homepage-scrolltop img { transform: rotate(180deg) translateX(50%); }
+
+  @media (min-width: 768px) {
+    .homepage-scrolltop { right: 40px; }
+    .homepage-scrolltop img { transform: rotate(180deg) translateX(0); }
   }
 </style>

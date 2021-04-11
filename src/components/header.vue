@@ -2,7 +2,7 @@
   <div class="header position-sticky">
     <div class="header-container d-flex">
       <div class="header-search">
-        <Search v-on:update:query="searchVoice($event)" />
+        <Search />
       </div>
       <div class="header-filters d-flex">
         <div class="header-filters_filter">
@@ -18,7 +18,8 @@
                   v-on:select="sortVoices($event)" />
         </div>
 
-        <Button :icon="require('@/assets/button-random.svg')"
+        <Button class="header-filters_randomize-btn"
+                :icon="require('@/assets/button-random.svg')"
                 v-on:onCLick="randomize" />
       </div>
     </div>
@@ -47,12 +48,12 @@ export default {
     ...mapGetters(["voicesList", "categories"]),
   },
   methods: {
-    ...mapActions(["filterVoices", "sortVoices", "selectVoice", "searchVoice"]),
+    ...mapActions(["filterVoices", "sortVoices", "selectVoice", "handleSearch"]),
 
     randomize() {
       const rndm = Math.floor(Math.random() * (this.voicesList.length - 0)) + 0;
       this.selectVoice(this.voicesList[rndm].id);
-      const item = document.querySelector(`#${this.voicesList[rndm].id}`);
+      const item = document.getElementById(`${this.voicesList[rndm].id}`);
       item.scrollIntoView({ block: 'center', behavior: 'smooth' });
     }
   }
@@ -106,12 +107,7 @@ export default {
 
 .header-filters_randomize-btn {
   background: #000;
-  border: none;
-  outline: none;
-  height: 32px;
   width: 100%;
-  border-radius: 4px;
-  text-align: center;
 }
 
 @media (min-width: 768px) {

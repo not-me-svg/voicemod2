@@ -1,21 +1,21 @@
 <template>
-  <div class="select d-flex align-items-center">
-    <div v-if="icon" class="select-icon">
+  <div class="vm-select d-flex align-items-center">
+    <div v-if="icon" class="vm-select-icon">
       <img :src="icon" alt="selector icon" class="position-relative" />
     </div>
-    <div  class="select-container position-relative"
+    <div  class="vm-select-container position-relative"
           :tabindex="tabindex"
           @blur="open = false">
-      <div  class="select-container_selected text-capitalize"
-            :class="{ 'select-container_selected--open': open }"
+      <div  class="vm-select-container_selected text-capitalize"
+            :class="{ 'vm-select-container_selected--open': open }"
             @click="open = !open">
         {{ selected ? selected : defaultOption }}
       </div>
-      <div   class="select-container_items position-absolute"
+      <div   class="vm-select-container_items position-absolute"
             :class="{ 'd-none': !open }">
         <div  v-for="(option, i) of options"
               :key="i"
-              class="select-container_items_option text-capitalize"
+              class="vm-select-container_items_option text-capitalize"
               @click="selectOption(option)">
           {{ option }}
         </div>
@@ -25,6 +25,8 @@
 </template>
 
 <script>
+import { ref } from 'vue';
+
 export default {
   name: 'Select',
   props: {
@@ -44,25 +46,24 @@ export default {
     },
     icon: String
   },
-  methods: {
-    selectOption(e) {
-      this.selected = e;
-      this.open = false;
-      this.$emit('select', this.selected);
-    },
-  },
-  data() {
-    return {
-      selected: null,
-      open: false,
-    };
+  setup(props, { emit }){
+    let selected = ref(null);
+    let open = ref(false);
+
+    const selectOption = (e) => {
+      selected.value = e;
+      open.value = false;
+      emit('select', selected.value);
+    }
+
+    return { selectOption, selected, open }
   }
 };
 </script>
 
 <style  scoped>
 
-.select-container {
+.vm-select-container {
   min-width: 130px;
   outline: none;
   height: 32px;
@@ -70,7 +71,7 @@ export default {
   text-align: left;
 }
 
-.select-container_selected {
+.vm-select-container_selected {
   background-color: #0a0a0a;
   border-radius: 4px;
   color: #fff;
@@ -79,7 +80,7 @@ export default {
   user-select: none;
 }
 
-.select-container_selected::after {
+.vm-select-container_selected::after {
   content: '';
   position: absolute;
   top: 50%;
@@ -93,15 +94,15 @@ export default {
   background-position: center;
 }
 
-.select-container_selected.select-container_selected--open {
+.vm-select-container_selected.select-container_selected--open {
   border-radius: 4px 4px 0px 0px;
 }
 
-.select-container_selected.select-container_selected--open::after { 
+.vm-select-container_selected.select-container_selected--open::after { 
   transform: translateY(-50%) rotate(180deg); 
 }
 
-.select-container_items {
+.vm-select-container_items {
   color: #fff;
   border-radius: 0px 0px 4px 4px;
   overflow: hidden;
@@ -111,7 +112,7 @@ export default {
   z-index: 1;
 }
 
-.select-container_items div {
+.vm-select-container_items div {
   color: #808080;
   border-top: 1px solid #3e3d3d;
   padding-left: 16px;
@@ -119,9 +120,9 @@ export default {
   user-select: none;
 }
 
-.select-container_items div:hover { color: #fff; }
+.vm-select-container_items div:hover { color: #fff; }
 
-.select-icon {
+.vm-select-icon {
   height: 32px;
   width: 32px;
   margin-right: 4px;

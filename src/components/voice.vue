@@ -1,12 +1,12 @@
 <template>
-  <div  v-if="voice" class="voice" :class="{'voice--fav': voice.isFav, 'voice--selected': voice.isSelected}">
+  <div v-if="voice" class="voice" :class="{'voice--fav': voice.isFav, 'voice--selected': voice.isSelected}">
     <div class="voice-wrapper position-relative d-flex flex-column align-items-center">
-      <div class="voice-fav-icon position-absolute" @click="favVoice(voice.id)"></div>
-          <div class="voice-image position-relative" @click="selectVoice(voice.id)">
-            <img :src="require(`./../assets/${ voice.icon }`)" :alt="voice.name" class="position-relative"/>
-          </div>
-          <h6 class="voice-name">{{ voice.name }}</h6>
+      <div id="voice-fav-icon" class="voice-fav-icon position-absolute" @click="favVoice(voice.id)"></div>
+      <div id="voice-image" class="voice-image position-relative" @click="selectVoice(voice.id)">
+        <img :src="require(`./../assets/${ voice.icon }`)" :alt="voice.name" class="position-relative"/>
       </div>
+      <h6 class="voice-name">{{ voice.name }}</h6>
+    </div>
   </div>
 </template>
 
@@ -16,9 +16,18 @@ import { mapActions } from "vuex";
 export default {
   name: 'Voice',
   props: {
-    voice: Object,
-    isSelected: Boolean,
-    isFav: Boolean,
+    voice: {
+      type: Object,
+      required: true
+    },
+    isSelected: {
+      type: Boolean,
+      default: false
+    },
+    isFav: {
+      type: Boolean,
+      default: false
+    }
   },
   methods: {
     ...mapActions(["selectVoice", "favVoice"])
@@ -40,7 +49,7 @@ export default {
     height: 113px;
     border-radius: 100%;
     overflow: hidden;
-    background: #d2d2d2;
+    background: #fff;
   }
 
   .voice .voice-image img { z-index: 1; }
@@ -57,9 +66,13 @@ export default {
     background: linear-gradient(29deg, rgba(0,197,255,1) 0%, rgba(1,228,255,1) 100%);
   }
 
-  .voice:hover .voice-image { background: #fff; }
-
   .voice.voice--selected .voice-image::before { opacity: 1; }
+
+  @media (min-width: 768px) {
+    .voice .voice-image { background: #d2d2d2; }
+
+    .voice:hover .voice-image { background: #fff; }
+  }
 
   /* Voice fav icon */
   .voice .voice-fav-icon {
@@ -70,7 +83,6 @@ export default {
     height: 32px;
     border-radius: 100%;
     background-color: #fff;
-    opacity: 0;
     transition: opacity;
   }
 
@@ -85,9 +97,13 @@ export default {
     transform: translateX(-50%) translateY(-50%);
   }
 
-  .voice:hover .voice-fav-icon {
-    opacity: 1;
-    transition: opacity .1s;
+  @media (min-width: 768px) {
+    .voice .voice-fav-icon { opacity: 0; }
+
+    .voice:hover .voice-fav-icon {
+      opacity: 1;
+      transition: opacity .1s;
+    }
   }
 
   .voice.voice--fav .voice-fav-icon::before {

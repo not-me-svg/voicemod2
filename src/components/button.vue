@@ -1,9 +1,9 @@
 <template>
     <button type="button"
-            class="header-filters_randomize-btn position-relative"
-            @click="$emit('onCLick')">
+            class="vm-button position-relative"
+            @click="emitOnClick">
             
-            <div v-if="icon" class="button-icon">
+            <div v-if="icon" class="vm-button-icon">
                 <img :src="icon" alt="button icon" class="position-relative" />
             </div>
 
@@ -16,17 +16,30 @@ export default {
     props: {
         text: String,
         icon: String
+    },
+    methods: {
+        emitOnClick() {
+            this.$emit('onCLick');
+        }
     }
 }
 </script>
 
 <style>
-    .button-icon {
+    .vm-button {
+        border: none;
+        outline: none;
+        height: 32px;
+        border-radius: 4px;
+        text-align: center;
+    }
+
+    .vm-button-icon {
         height: 32px;
         width: 32px;
         display: inline-block;
         padding: 4px;
     }
 
-    .button-icon img { height: 100%; }
+    .vm-button-icon img { height: 100%; }
 </style>

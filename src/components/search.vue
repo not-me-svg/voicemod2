@@ -1,33 +1,39 @@
 <template>
-  <label class="input-search position-relative d-flex" for="search">
-    <i aria-hidden="true" class="input-search-icon"></i>
+  <label class="vm-search position-relative d-flex" for="search">
+    <i aria-hidden="true" class="vm-search-icon"></i>
     <input  type="text"
-            v-model="search"
-            @input="$emit('update:query', $event.target.value)" />
-    <i aria-hidden="true" class="input-search-close" @click="resetInput"></i>
+            v-model="query"
+            @keyup="handleSearch" />
+    <i aria-hidden="true" class="vm-search-close" @click="resetInput"></i>
   </label>
 </template>
 
 <script>
+import { ref } from 'vue';
+import { useStore } from 'vuex';
+
 export default {
   name: 'Search',
-  props: ['query'],
-  data() {
-    return {
-      search: "",
+  setup(){
+    const query = ref('');
+    const store = useStore();
+
+    const handleSearch = () => {
+      store.dispatch('searchVoices', query.value)
     }
-  },
-  methods: {
-    resetInput() {
-      this.search = '';
-      this.$emit('update:query', '');
-    },
-  },
+
+    const resetInput = () => {
+      query.value = '';
+      store.dispatch('searchVoices');
+    }
+
+    return { query, handleSearch, resetInput }
+  }
 };
 </script>
 
 <style  scoped>
-.input-search {
+.vm-search {
   background-color: #000;
   border-radius: 25px;
   height: 32px;
@@ -35,7 +41,7 @@ export default {
   padding: 0 32px;
 }
 
-.input-search-icon::before {
+.vm-search-icon::before {
   content: '';
   position: absolute;
   top: 50%;
@@ -47,9 +53,9 @@ export default {
   background-size: cover;
 }
 
-.input-search input { flex: 1; }
+.vm-search input { flex: 1; }
 
-.input-search .input-search-close::before {
+.vm-search .vm-search-close::before {
   content: '';
   position: absolute;
   top: 50%;

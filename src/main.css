@@ -539,6 +539,7 @@ body {
 
 .d-flex { display: flex; }
 .justify-content-between { justify-content: space-between; }
+.justify-content-center { justify-content: center; }
 .align-items-center { align-items: center; }
 .flex-column { flex-direction: column; }
 .d-none { display: none; }
@@ -549,6 +550,7 @@ body {
 .position-absolute { position: absolute; }
 .position-relative { position: relative; }
 .position-sticky { position: sticky; }
+.position-fixed { position: fixed; }
 
 /** 
  * Text 
