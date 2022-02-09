@@ -1,7 +1,7 @@
 # voicemod
 😃 Hey! you can check this awesome app here :)
 
-👉👉👉 [Susana's voicemod test 2nd round](https://staranco.github.io/voicemod2/)
+👉👉👉 [Susana's voicemod test 2nd round](https://not-me-svg.github.io/voicemod2/)
 
 ## Project setup
 ```
